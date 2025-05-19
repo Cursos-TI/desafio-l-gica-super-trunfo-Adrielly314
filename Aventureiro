@@ -1,0 +1,187 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    // Variáveis do jogador
+    char Nome1[60];
+    int Idade;
+    int Nascimento;
+    char Tutorial[20];
+
+    printf("\n    ===== SUPER TRUNFO =====\n");
+
+    // Pergunta o nome
+    printf("Olá novo jogador. Qual é o seu nome? ");
+    if (scanf(" %[^\n]", Nome1) != 1) {
+        printf("Erro ao ler o nome.\n");
+        return 1;
+    }
+
+    // Pergunta a idade
+    printf("Nome bonito o seu, %s! Qual é a sua idade? ", Nome1);
+    if (scanf("%d", &Idade) != 1) {
+        printf("Erro ao ler a idade.\n");
+        return 1;
+    }
+
+    // Pergunta o ano de nascimento
+    printf("Quando você nasceu? ");
+    if (scanf("%d", &Nascimento) != 1) {
+        printf("Erro ao ler o ano de nascimento.\n");
+        return 1;
+    }
+
+    // Limpa o buffer do teclado
+    while (getchar() != '\n');
+
+    // Pergunta se deseja o tutorial
+    printf("Deseja receber o tutorial? (Sim ou Não) ");
+    if (scanf(" %[^\n]", Tutorial) != 1) {
+        printf("Erro ao ler resposta.\n");
+        return 1;
+    }
+
+    // Exibe o tutorial se o jogador respondeu "Sim"
+    if (strcmp(Tutorial, "Sim") == 0) {
+        printf("\n===== TUTORIAL =====\n");
+        printf("No jogo Super Trunfo - Países, cada jogador recebe cartas de cidades com informações como população, área, PIB e pontos turísticos.\n");
+        printf("A cada rodada, um jogador escolhe uma característica de sua carta e compara com a do adversário.\n");
+        printf("Quem tiver o maior valor vence e fica com a carta do outro jogador.\n");
+        printf("O jogo continua até que um dos jogadores tenha todas as cartas.\n");
+        printf("Dica: escolha bem suas jogadas e tente adivinhar a estratégia do adversário!\n\n");
+    } else {
+        printf("Ok! Vamos prosseguir então.\n\n");
+    }
+
+    // Cabeçalho
+    printf("=========================================================\n");
+    printf("               SUPER TRUNFO\n");
+    printf("=========================================================\n");
+
+    // Dados das cidades
+    char Paises[5][20] = {"Brasil", "EUA", "Japão", "França", "Austrália"};
+    char Cidades[5][20] = {"Rio de Janeiro", "Nova York", "Tóquio", "Paris", "Sydney"};
+
+    int Populacoes[5] = {6748000, 8419000, 13960000, 2148000, 5312000};
+    float Areas[5] = {1182.3, 783.8, 2194.1, 105.4, 12367.7};
+    float PIBs[5] = {105.0, 1700.0, 1600.0, 850.0, 130.0};
+    int PontosTuristicos[5] = {7, 10, 8, 9, 6};
+
+    // Cálculo da Densidade Demográfica
+    float Densidades[5];
+    for (int i = 0; i < 5; i++) {
+        Densidades[i] = Populacoes[i] / Areas[i];
+    }
+
+    // CIDADES DISPONÍVEIS
+    printf("\nCIDADES DISPONÍVEIS:\n");
+    for (int i = 0; i < 5; i++) {
+        printf("[%d] %s (%s)\n", i, Cidades[i], Paises[i]);
+    }
+
+    // Jogador 1 escolhe
+    int Escolha1;
+    printf("\n%s, escolha sua cidade (0 a 4): ", Nome1);
+    scanf("%d", &Escolha1);
+    if (Escolha1 < 0 || Escolha1 > 4) {
+        printf("Escolha inválida!\n");
+        return 1;
+    }
+
+    // Jogador 2 escolhe
+    int Escolha2;
+    printf("Jogador 2, escolha sua cidade (0 a 4): ");
+    scanf("%d", &Escolha2);
+    if (Escolha2 < 0 || Escolha2 > 4) {
+        printf("Escolha inválida!\n");
+        return 1;
+    }
+
+    // Mostrar cartas escolhidas
+    printf("\n================== CARTAS ESCOLHIDAS ==================\n");
+    printf("%s:\n", Nome1);
+    printf("Cidade: %s (%s)\n", Cidades[Escolha1], Paises[Escolha1]);
+    printf("População: %d habitantes\n", Populacoes[Escolha1]);
+    printf("Área: %.2f km²\n", Areas[Escolha1]);
+    printf("PIB: R$ %.2f bilhões\n", PIBs[Escolha1]);
+    printf("Pontos Turísticos: %d\n", PontosTuristicos[Escolha1]);
+    printf("Densidade Demográfica: %.2f hab/km²\n", Densidades[Escolha1]);
+
+    printf("\nJogador 2:\n");
+    printf("Cidade: %s (%s)\n", Cidades[Escolha2], Paises[Escolha2]);
+    printf("População: %d habitantes\n", Populacoes[Escolha2]);
+    printf("Área: %.2f km²\n", Areas[Escolha2]);
+    printf("PIB: R$ %.2f bilhões\n", PIBs[Escolha2]);
+    printf("Pontos Turísticos: %d\n", PontosTuristicos[Escolha2]);
+    printf("Densidade Demográfica: %.2f hab/km²\n", Densidades[Escolha2]);
+
+    // Escolha do critério
+    int Criterio;
+    printf("\n%s, escolha o critério para comparar:\n", Nome1);
+    printf("1 - População\n");
+    printf("2 - Área\n");
+    printf("3 - PIB\n");
+    printf("4 - Pontos Turísticos\n");
+    printf("5 - Densidade Demográfica (quanto MENOR, melhor)\n");
+    printf("Digite sua escolha: ");
+    if (scanf("%d", &Criterio) != 1 || Criterio < 1 || Criterio > 5) {
+        printf("Critério inválido!\n");
+        return 1;
+    }
+
+    // Comparação
+    float Valor1 = 0, Valor2 = 0;
+    char NomeCriterio[30];
+
+    switch (Criterio) {
+        case 1:
+            Valor1 = Populacoes[Escolha1];
+            Valor2 = Populacoes[Escolha2];
+            strcpy(NomeCriterio, "População");
+            break;
+        case 2:
+            Valor1 = Areas[Escolha1];
+            Valor2 = Areas[Escolha2];
+            strcpy(NomeCriterio, "Área");
+            break;
+        case 3:
+            Valor1 = PIBs[Escolha1];
+            Valor2 = PIBs[Escolha2];
+            strcpy(NomeCriterio, "PIB");
+            break;
+        case 4:
+            Valor1 = PontosTuristicos[Escolha1];
+            Valor2 = PontosTuristicos[Escolha2];
+            strcpy(NomeCriterio, "Pontos Turísticos");
+            break;
+        case 5:
+            Valor1 = Densidades[Escolha1];
+            Valor2 = Densidades[Escolha2];
+            strcpy(NomeCriterio, "Densidade Demográfica");
+            break;
+    }
+
+    // Resultado
+    printf("\n================== RESULTADO ==================\n");
+    printf("Atributo escolhido: %s\n", NomeCriterio);
+    printf("Valor de %s: %.2f\n", Nome1, Valor1);
+    printf("Valor do Jogador 2: %.2f\n", Valor2);
+
+    if (Criterio == 5) {
+        if (Valor1 < Valor2)
+            printf("\n%s venceu (menor densidade)!\n", Nome1);
+        else if (Valor2 < Valor1)
+            printf("\nJogador 2 venceu (menor densidade)!\n");
+        else
+            printf("\nEmpate!\n");
+    } else {
+        if (Valor1 > Valor2)
+            printf("\n%s venceu!\n", Nome1);
+        else if (Valor2 > Valor1)
+            printf("\nJogador 2 venceu!\n");
+        else
+            printf("\nEmpate!\n");
+    }
+
+    return 0;
+}
